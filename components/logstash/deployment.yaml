@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metdata:
+  name: logstash
+  labels: &Labels
+    app.kubernetes.io/name: logstash
+spec:
+  selector:
+    matchLabels: *Labels
+  template:
+    spec:
+      metadata:
+        labels: *Labels
+      containers:
+        - name: logstash
+          image: logstash
+          resources:
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"

@@ -1,0 +1,26 @@
+environment: development
+global:
+  elasticsearch_endpoint: https://es.dev.example.com:9200
+stacks:
+  gke_dev_europe-west4_gc-dev-kube0:
+    kibana:
+      resources:
+        requests:
+          cpu: "1"
+          memory: "1G"
+        limits:
+          cpu: "2"
+          memory: "2G"
+      minReplicas: 3
+      maxReplicas: 9
+  gke_dev_europe-west4_gc-dev-kube1:
+    logstash:
+      resources:
+        requests:
+          cpu: "1"
+          memory: "1G"
+        limits:
+          cpu: "2"
+          memory: "2G"
+      minReplicas: 3
+      maxReplicas: 12

@@ -1,0 +1,26 @@
+environment: production
+global:
+  elasticsearch_endpoint: https://es.prd.example.com:9200
+stacks:
+  gke_prd_europe-west4_gc-prd-kube0:
+    kibana:
+      resources:
+        requests:
+          cpu: "8"
+          memory: "8G"
+        limits:
+          cpu: "8"
+          memory: "8G"
+      minReplicas: 3
+      maxReplicas: 12
+  gke_prd_europe-west4_gc-prd-kube1:
+    logstash:
+      resources:
+        requests:
+          cpu: "8"
+          memory: "8G"
+        limits:
+          cpu: "8"
+          memory: "8G"
+      minReplicas: 3
+      maxReplicas: 15
