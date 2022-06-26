@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metdata:
+  labels: &id001
+    app.kubernetes.io/name: kibana
+  name: kibana
+spec:
+  selector:
+    matchLabels: *id001
+  template:
+    spec:
+      containers:
+      - image: kibana
+        name: kibana
+        ports:
+        - containerPort: 5601
+        resources:
+          limits:
+            cpu: '8'
+            memory: 8G
+          requests:
+            cpu: '8'
+            memory: 8G
+      metadata:
+        labels: *id001

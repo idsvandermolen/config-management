@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metdata:
+  labels: &id001
+    app.kubernetes.io/name: logstash
+  name: logstash
+spec:
+  selector:
+    matchLabels: *id001
+  template:
+    spec:
+      containers:
+      - image: logstash
+        name: logstash
+        resources:
+          limits:
+            cpu: '2'
+            memory: 2G
+          requests:
+            cpu: '1'
+            memory: 1G
+      metadata:
+        labels: *id001
