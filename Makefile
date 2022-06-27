@@ -16,6 +16,6 @@ kibana: ## Build kibana
 	@bin/generate.py kibana
 .PHONY: kibana
 
-validate: ## Validat manifests
+validate: ## Validate manifests
 	@kubeconform --verbose manifests
 .PHONY: validate
