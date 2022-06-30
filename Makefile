@@ -8,12 +8,12 @@ all: logstash kibana ## Build all targets
 
 logstash: ## Build logstash
 	@rm -rf manifests/*/logstash
-	@bin/generate.py logstash
+	@./generate.py logstash
 .PHONY: logstash
 
 kibana: ## Build kibana
 	@rm -rf manifests/*/kibana
-	@bin/generate.py kibana
+	@./generate.py kibana
 .PHONY: kibana
 
 validate: ## Validate manifests
