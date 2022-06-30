@@ -7,10 +7,10 @@ import yaml
 from .datapath import DataPath
 
 
-def generate(components: Path, manifests: Path, config: DataPath, stack_name: str):
+def generate(src: Path, dst: Path, config: DataPath, stack_name: str):
     "Generate logstash manifests."
-    home = components / "logstash"
-    output_dir = Path(manifests, stack_name, "logstash")
+    home = src / "logstash"
+    output_dir = Path(dst, stack_name, "logstash")
     output_dir.mkdir(parents=True, exist_ok=True)
     # deployment
     deployment = DataPath(

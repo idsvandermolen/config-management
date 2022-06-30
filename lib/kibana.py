@@ -7,10 +7,10 @@ import yaml
 from .datapath import DataPath
 
 
-def generate(components: Path, manifests: Path, config: DataPath, stack_name: str):
+def generate(src: Path, dst: Path, config: DataPath, stack_name: str):
     "Generate kibana manifests."
-    home = components / "kibana"
-    output_dir = Path(manifests, stack_name, "kibana")
+    home = src / "kibana"
+    output_dir = Path(dst, stack_name, "kibana")
     output_dir.mkdir(parents=True, exist_ok=True)
     # deployment
     deployment = DataPath(
