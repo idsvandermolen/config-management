@@ -49,7 +49,7 @@ for stack_name in config["stacks"]:
 
 ## TODO
 There are a couple of possible improvements:
-* move `DataPath`, `parse_path`, `find` from `generate.py` into a library
+* [x] move `DataPath`, `parse_path`, `find` from `generate.py` into a library
 * implement dependency management in `Makefile` to only rebuild what is needed
 * make input (`components`) and output (`manifests`) explicit
 * add examples for other data files
