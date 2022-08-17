@@ -47,6 +47,16 @@ for stack_name in config["stacks"]:
         write_some_data_file(data, stack, component)
 ```
 
+## Bootstrap
+Run these commands to setup the python environment:
+```bash
+# make sure you use python 3.8 or higher
+python3 -m venv .venv \
+&& .venv/bin/pip install --upgrade pip \
+&& . .venv/bin/activate \
+&& .venv/bin/pip install poetry \
+&& .venv/bin/poetry install
+```
 ## TODO
 There are a couple of possible improvements:
 * [x] move `DataPath`, `parse_path`, `find` from `generate.py` into a library
