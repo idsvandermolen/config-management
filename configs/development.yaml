@@ -3,7 +3,7 @@ global:
   elasticsearch_endpoint: https://es.dev.example.com:9200
 stacks:
   gke_dev_europe-west4_gc-dev-kube0:
-    kibana:
+    grafana:
       resources:
         requests:
           cpu: "1"
@@ -14,7 +14,7 @@ stacks:
       minReplicas: 3
       maxReplicas: 9
   gke_dev_europe-west4_gc-dev-kube1:
-    logstash:
+    prometheus:
       resources:
         requests:
           cpu: "1"

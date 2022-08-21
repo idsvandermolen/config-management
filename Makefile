@@ -3,18 +3,18 @@ help:  ## Show help messages for make targets
 	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}'
 .PHONY: help
 
-all: logstash kibana ## Build all targets
+all: prometheus grafana ## Build all targets
 .PHONY: all
 
-logstash: ## Build logstash
-	@rm -rf manifests/*/logstash
-	@./generate.py logstash
-.PHONY: logstash
+prometheus: ## Build prometheus
+	@rm -rf manifests/*/prometheus
+	@./generate.py prometheus
+.PHONY: prometheus
 
-kibana: ## Build kibana
-	@rm -rf manifests/*/kibana
-	@./generate.py kibana
-.PHONY: kibana
+grafana: ## Build grafana
+	@rm -rf manifests/*/grafana
+	@./generate.py grafana
+.PHONY: grafana
 
 validate: ## Validate manifests
 	@kubeconform --verbose manifests
