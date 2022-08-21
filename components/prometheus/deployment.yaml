@@ -9,10 +9,10 @@ spec:
     matchLabels:
       name: prometheus
   template:
+    metadata:
+      labels:
+        name: prometheus
     spec:
-      metadata:
-        labels:
-          name: prometheus
       containers:
         - image: prom/prometheus
           name: prometheus

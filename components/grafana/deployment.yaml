@@ -7,10 +7,10 @@ spec:
     matchLabels:
       name: grafana
   template:
+    metadata:
+      labels:
+        name: grafana
     spec:
-      metadata:
-        labels:
-          name: grafana
       containers:
         - image: grafana/grafana
           name: grafana

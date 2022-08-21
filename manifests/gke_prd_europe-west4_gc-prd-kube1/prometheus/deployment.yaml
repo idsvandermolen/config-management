@@ -9,6 +9,9 @@ spec:
     matchLabels:
       name: prometheus
   template:
+    metadata:
+      labels:
+        name: prometheus
     spec:
       containers:
       - image: prom/prometheus
@@ -23,6 +26,3 @@ spec:
           requests:
             cpu: '8'
             memory: 8G
-      metadata:
-        labels:
-          name: prometheus
