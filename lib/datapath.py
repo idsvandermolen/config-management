@@ -48,8 +48,16 @@ class DataPath:
         ref[key] = value
 
     def __delitem__(self, path):
+        "Delete item at path."
         ref, key = find(self.data, parse_path(path))
         del ref[key]
+
+    def get(self, path, default=None):
+        "Return the value for path if path exists, else default."
+        try:
+            return self[path]
+        except (KeyError, IndexError) as _:
+            return default
 
     def __repr__(self):
         "Return repr(self)."
