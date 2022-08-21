@@ -1,21 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
-metdata:
+metadata:
   name: grafana
-  labels: &Labels
-    app.kubernetes.io/name: grafana
 spec:
   selector:
-    matchLabels: *Labels
+    matchLabels:
+      name: grafana
   template:
     spec:
       metadata:
-        labels: *Labels
+        labels:
+          name: grafana
       containers:
-        - name: grafana
-          image: grafana
+        - image: grafana/grafana
+          name: grafana
           ports:
-            - containerPort: 5601
+            - containerPort: 3000
+              name: ui
           resources:
             requests:
               cpu: "1"
