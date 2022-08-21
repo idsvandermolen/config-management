@@ -10,7 +10,6 @@ from lib.grafana import generate as generate_grafana
 from lib.prometheus import generate as generate_prometheus
 
 CONFIGS = Path("configs")
-COMPONENTS = Path("components")
 MANIFESTS = Path("manifests")
 GENERATORS = {
     "grafana": generate_grafana,
@@ -39,7 +38,7 @@ def main(argv):
         for stack_name in config["stacks"]:
             if component_name not in config[f"stacks.{stack_name}"]:
                 continue
-            generate(COMPONENTS, MANIFESTS, config, stack_name)
+            generate(MANIFESTS, config, stack_name)
 
 
 if __name__ == "__main__":
