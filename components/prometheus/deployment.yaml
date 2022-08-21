@@ -2,18 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metdata:
   name: prometheus
-  labels: &Labels
-    app.kubernetes.io/name: prometheus
+  labels:
+    name: prometheus
 spec:
   selector:
-    matchLabels: *Labels
+    matchLabels:
+      name: prometheus
   template:
     spec:
       metadata:
-        labels: *Labels
+        labels:
+          name: prometheus
       containers:
-        - name: prometheus
-          image: prometheus
+        - image: prom/prometheus
+          name: prometheus
+          ports:
+            - containerPort: 9090
+              name: api
           resources:
             requests:
               cpu: "1"

@@ -28,5 +28,7 @@ def generate(src: Path, dst: Path, config: DataPath, stack_name: str):
     hpa["spec.minReplicas"] = config[f"stacks.{stack_name}.prometheus.minReplicas"]
     hpa["spec.maxReplicas"] = config[f"stacks.{stack_name}.prometheus.maxReplicas"]
     yaml.safe_dump(hpa.data, Path(output_dir / "hpa.yaml").open("w", encoding="utf-8"))
+    # service
+    shutil.copy(home / "service.yaml", output_dir / "service.yaml")
     # service-account
     shutil.copy(home / "service-account.yaml", output_dir / "service-account.yaml")
