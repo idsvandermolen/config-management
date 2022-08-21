@@ -2,16 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metdata:
   labels: &id001
-    app.kubernetes.io/name: logstash
-  name: logstash
+    app.kubernetes.io/name: grafana
+  name: grafana
 spec:
   selector:
     matchLabels: *id001
   template:
     spec:
       containers:
-      - image: logstash
-        name: logstash
+      - image: grafana
+        name: grafana
+        ports:
+        - containerPort: 5601
         resources:
           limits:
             cpu: '8'

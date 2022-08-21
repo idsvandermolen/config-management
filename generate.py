@@ -6,15 +6,15 @@ import sys
 from pathlib import Path
 import yaml
 from lib.datapath import DataPath
-from lib.kibana import generate as generate_kibana
-from lib.logstash import generate as generate_logstash
+from lib.grafana import generate as generate_grafana
+from lib.prometheus import generate as generate_prometheus
 
 CONFIGS = Path("configs")
 COMPONENTS = Path("components")
 MANIFESTS = Path("manifests")
 GENERATORS = {
-    "kibana": generate_kibana,
-    "logstash": generate_logstash,
+    "grafana": generate_grafana,
+    "prometheus": generate_prometheus,
 }
 
 

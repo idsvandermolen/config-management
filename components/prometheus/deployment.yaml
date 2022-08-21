@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metdata:
-  name: kibana
+  name: prometheus
   labels: &Labels
-    app.kubernetes.io/name: kibana
+    app.kubernetes.io/name: prometheus
 spec:
   selector:
     matchLabels: *Labels
@@ -12,10 +12,8 @@ spec:
       metadata:
         labels: *Labels
       containers:
-        - name: kibana
-          image: kibana
-          ports:
-            - containerPort: 5601
+        - name: prometheus
+          image: prometheus
           resources:
             requests:
               cpu: "1"

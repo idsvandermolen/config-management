@@ -1,12 +1,12 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: kibana
+  name: prometheus
 spec:
+  maxReplicas: 15
+  minReplicas: 3
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: kibana
-  minReplicas: 1
-  maxReplicas: 1
+    name: prometheus
   targetCPUUtilizationPercentage: 80

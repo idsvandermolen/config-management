@@ -3,7 +3,7 @@ global:
   elasticsearch_endpoint: https://es.prd.example.com:9200
 stacks:
   gke_prd_europe-west4_gc-prd-kube0:
-    kibana:
+    grafana:
       resources:
         requests:
           cpu: "8"
@@ -14,7 +14,7 @@ stacks:
       minReplicas: 3
       maxReplicas: 12
   gke_prd_europe-west4_gc-prd-kube1:
-    logstash:
+    prometheus:
       resources:
         requests:
           cpu: "8"
