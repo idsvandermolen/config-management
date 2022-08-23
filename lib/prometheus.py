@@ -19,11 +19,26 @@ def generate(dst: Path, config: DataPath, stack_name: str):
     # deployment
     deployment = util.mk_deployment(
         name,
-        port,
-        port_name,
-        config.get(f"stacks.{stack_name}.prometheus.image", "prom/prometheus"),
-        config[f"stacks.{stack_name}.prometheus.resources.requests"],
-        config[f"stacks.{stack_name}.prometheus.resources.limits"],
+        [
+            k.V1Container(
+                name=name,
+                image=config.get(
+                    f"stacks.{stack_name}.prometheus.image", "prom/prometheus"
+                ),
+                ports=[
+                    k.V1ContainerPort(
+                        name=port_name,
+                        container_port=port,
+                    )
+                ],
+                resources=k.V1ResourceRequirements(
+                    requests=config[
+                        f"stacks.{stack_name}.prometheus.resources.requests"
+                    ],
+                    limits=config[f"stacks.{stack_name}.prometheus.resources.limits"],
+                ),
+            )
+        ],
     )
     yaml.safe_dump(
         client.sanitize_for_serialization(deployment),

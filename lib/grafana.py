@@ -19,11 +19,24 @@ def generate(dst: Path, config: DataPath, stack_name: str):
     # deployment
     deployment = util.mk_deployment(
         name,
-        port,
-        port_name,
-        config.get(f"stacks.{stack_name}.grafana.image", "grafana/grafana"),
-        config[f"stacks.{stack_name}.grafana.resources.requests"],
-        config[f"stacks.{stack_name}.grafana.resources.limits"],
+        [
+            k.V1Container(
+                name=name,
+                image=config.get(
+                    f"stacks.{stack_name}.grafana.image", "grafana/grafana"
+                ),
+                ports=[
+                    k.V1ContainerPort(
+                        name=port_name,
+                        container_port=port,
+                    )
+                ],
+                resources=k.V1ResourceRequirements(
+                    requests=config[f"stacks.{stack_name}.grafana.resources.requests"],
+                    limits=config[f"stacks.{stack_name}.grafana.resources.limits"],
+                ),
+            )
+        ],
     )
     yaml.safe_dump(
         client.sanitize_for_serialization(deployment),

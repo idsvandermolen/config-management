@@ -1,18 +1,12 @@
 """
 Various utility functions
 """
+import typing
 import kubernetes.client as k
 
 
-def mk_deployment(
-    name: str,
-    port: int,
-    port_name: str,
-    image: str,
-    requests: dict,
-    limits: dict,
-) -> k.V1Deployment:
-    "Generate Deployment"
+def mk_deployment(name: str, containers: typing.List[k.V1Container]) -> k.V1Deployment:
+    "Generate Deployment."
     return k.V1Deployment(
         api_version="apps/v1",
         kind="Deployment",
@@ -21,21 +15,7 @@ def mk_deployment(
             selector={"matchLabels": {"name": name}},
             template=k.V1PodTemplateSpec(
                 metadata=k.V1ObjectMeta(labels={"name": name}),
-                spec=k.V1PodSpec(
-                    containers=[
-                        k.V1Container(
-                            name=name,
-                            image=image,
-                            ports=[
-                                k.V1ContainerPort(name=port_name, container_port=port)
-                            ],
-                            resources=k.V1ResourceRequirements(
-                                requests=requests,
-                                limits=limits,
-                            ),
-                        )
-                    ],
-                ),
+                spec=k.V1PodSpec(containers=containers),
             ),
         ),
     )
