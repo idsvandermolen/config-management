@@ -53,4 +53,4 @@ class DataPath:
 
     def __repr__(self):
         "Return repr(self)."
-        return f"DataPath({repr(self.data)})"
+        return f"{self.__class__.__name__}({repr(self.data)})"
