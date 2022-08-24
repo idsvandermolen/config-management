@@ -12,7 +12,7 @@ def mk_deployment(name: str, containers: typing.List[k.V1Container]) -> k.V1Depl
         kind="Deployment",
         metadata=k.V1ObjectMeta(name=name),
         spec=k.V1DeploymentSpec(
-            selector={"matchLabels": {"name": name}},
+            selector=k.V1LabelSelector(match_labels={"name": name}),
             template=k.V1PodTemplateSpec(
                 metadata=k.V1ObjectMeta(labels={"name": name}),
                 spec=k.V1PodSpec(containers=containers),
