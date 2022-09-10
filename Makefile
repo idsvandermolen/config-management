@@ -10,12 +10,12 @@ clean: ## Cleanup manifests
 	@rm -rf manifests/*
 .PHONY: clean
 
-prometheus: components/prometheus ## Build prometheus
+prometheus: ## Build prometheus
 	@rm -rf manifests/*/prometheus
 	@./generate.py prometheus
 .PHONY: prometheus
 
-grafana: components/grafana ## Build grafana
+grafana: ## Build grafana
 	@rm -rf manifests/*/grafana
 	@./generate.py grafana
 .PHONY: grafana
