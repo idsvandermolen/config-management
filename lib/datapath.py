@@ -34,7 +34,10 @@ class DataPath:
     "Access data with path spec."
 
     def __init__(self, data):
-        "Initialise with data object."
+        """Initialise with data object.
+
+        data object should raise either KeyError or IndexError when an item does not exists
+        """
         self.data = data
 
     def __getitem__(self, path):
@@ -48,8 +51,24 @@ class DataPath:
         ref[key] = value
 
     def __delitem__(self, path):
+        "Delete item at path."
         ref, key = find(self.data, parse_path(path))
         del ref[key]
+
+    def __contains__(self, path) -> bool:
+        "True if path exists, False otherwise."
+        try:
+            _ = self[path]
+            return True
+        except (KeyError, IndexError) as _:
+            return False
+
+    def get(self, path, default=None):
+        "Return the value for path if path exists, else default."
+        try:
+            return self[path]
+        except (KeyError, IndexError) as _:
+            return default
 
     def __repr__(self):
         "Return repr(self)."
