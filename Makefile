@@ -3,15 +3,19 @@ help:  ## Show help messages for make targets
 	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}'
 .PHONY: help
 
-all: prometheus grafana ## Build all targets
+all: prometheus grafana validate ## Build all targets
 .PHONY: all
 
-prometheus: ## Build prometheus
+clean: ## Cleanup manifests
+	@rm -rf manifests/*
+.PHONY: clean
+
+prometheus: components/prometheus ## Build prometheus
 	@rm -rf manifests/*/prometheus
 	@./generate.py prometheus
 .PHONY: prometheus
 
-grafana: ## Build grafana
+grafana: components/grafana ## Build grafana
 	@rm -rf manifests/*/grafana
 	@./generate.py grafana
 .PHONY: grafana
