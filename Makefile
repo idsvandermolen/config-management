@@ -6,6 +6,14 @@ help:  ## Show help messages for make targets
 all: prometheus grafana validate ## Build all targets
 .PHONY: all
 
+bootstrap: ## Setup python .venv
+	python3 -m venv .venv \
+	&& .venv/bin/pip install --no-cache-dir --upgrade pip \
+	&& . .venv/bin/activate \
+	&& .venv/bin/pip install --no-cache-dir poetry \
+	&& .venv/bin/poetry install
+.PHONY: bootstrap
+
 clean: ## Cleanup manifests
 	@rm -rf manifests/*
 .PHONY: clean

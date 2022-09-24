@@ -50,12 +50,7 @@ for stack_name in config["stacks"]:
 ## Bootstrap
 Run these commands to setup the python environment:
 ```bash
-# make sure you use python 3.8 or higher
-python3 -m venv .venv \
-&& .venv/bin/pip install --upgrade pip \
-&& . .venv/bin/activate \
-&& .venv/bin/pip install poetry \
-&& .venv/bin/poetry install
+make bootstrap
 ```
 ## TODO
 There are a couple of possible improvements:
