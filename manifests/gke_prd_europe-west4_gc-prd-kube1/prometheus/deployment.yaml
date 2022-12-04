@@ -12,7 +12,7 @@ spec:
         name: prometheus
     spec:
       containers:
-      - image: prom/prometheus
+      - image: prom/prometheus:v2.14
         name: prometheus
         ports:
         - containerPort: 9090

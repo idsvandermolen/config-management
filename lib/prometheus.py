@@ -2,33 +2,79 @@
 Generate Prometheus components
 """
 from pathlib import Path
-import shutil
+import kubernetes.client as k
 import yaml
+from . import util
 from .datapath import DataPath
 
 
-def generate(src: Path, dst: Path, config: DataPath, stack_name: str):
+def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
     "Generate prometheus manifests."
-    home = src / "prometheus"
     output_dir = Path(dst, stack_name, "prometheus")
     output_dir.mkdir(parents=True, exist_ok=True)
+    client = k.ApiClient()
+    name = config.get(f"stacks.{stack_name}.prometheus.name", "prometheus")
+    port = config.get(f"stacks.{stack_name}.prometheus.port", 9090)
+    port_name = "api"
     # deployment
-    deployment = DataPath(
-        yaml.safe_load(Path(home, "deployment.yaml").open(encoding="utf-8"))
+    deployment = util.mk_deployment(
+        name,
+        [
+            k.V1Container(
+                name=name,
+                image=config.get(
+                    f"stacks.{stack_name}.prometheus.image", "prom/prometheus"
+                ),
+                ports=[
+                    k.V1ContainerPort(
+                        name=port_name,
+                        container_port=port,
+                    )
+                ],
+                resources=k.V1ResourceRequirements(
+                    requests=config[
+                        f"stacks.{stack_name}.prometheus.resources.requests"
+                    ],
+                    limits=config[f"stacks.{stack_name}.prometheus.resources.limits"],
+                ),
+            )
+        ],
     )
-    deployment["spec.template.spec.containers.0.resources"] = config[
-        f"stacks.{stack_name}.prometheus.resources"
-    ]
     yaml.safe_dump(
-        deployment.data,
+        client.sanitize_for_serialization(deployment),
         Path(output_dir / "deployment.yaml").open("w", encoding="utf-8"),
     )
     # hpa
-    hpa = DataPath(yaml.safe_load(Path(home, "hpa.yaml").open(encoding="utf-8")))
-    hpa["spec.minReplicas"] = config[f"stacks.{stack_name}.prometheus.minReplicas"]
-    hpa["spec.maxReplicas"] = config[f"stacks.{stack_name}.prometheus.maxReplicas"]
-    yaml.safe_dump(hpa.data, Path(output_dir / "hpa.yaml").open("w", encoding="utf-8"))
+    yaml.safe_dump(
+        client.sanitize_for_serialization(
+            util.mk_hpa(
+                name,
+                min_replicas=config[f"stacks.{stack_name}.prometheus.minReplicas"],
+                max_replicas=config[f"stacks.{stack_name}.prometheus.maxReplicas"],
+                scale_target_ref=k.V1CrossVersionObjectReference(
+                    api_version=deployment.api_version,
+                    kind=deployment.kind,
+                    name=deployment.metadata.name,
+                ),
+            )
+        ),
+        Path(output_dir / "hpa.yaml").open("w", encoding="utf-8"),
+    )
     # service
-    shutil.copy(home / "service.yaml", output_dir / "service.yaml")
+    yaml.safe_dump(
+        client.sanitize_for_serialization(
+            util.mk_service(name, port=port, port_name=port_name)
+        ),
+        Path(output_dir / "service.yaml").open("w", encoding="utf-8"),
+    )
     # service-account
-    shutil.copy(home / "service-account.yaml", output_dir / "service-account.yaml")
+    yaml.safe_dump(
+        client.sanitize_for_serialization(
+            util.mk_service_account(name, automount_token=False)
+        ),
+        Path(output_dir / "service-account.yaml").open("w", encoding="utf-8"),
+    )
+    # ArgoCD app
+    app = DataPath(yaml.safe_load(Path(components, "argocd", "prometheus.yaml").open(encoding="utf-8")))
+    app["spec.source.path"] = str(output_dir)
+    yaml.safe_dump(app.data, Path(output_dir, "application.yaml").open("w", encoding="utf-8"))
