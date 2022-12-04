@@ -57,7 +57,7 @@ There are a couple of possible improvements:
 * [x] move `DataPath`, `parse_path`, `find` from `generate.py` into a library
 * [ ] implement dependency management in `Makefile` to only rebuild what is needed
 * [x] make input/src (`components`) and output/dst (`manifests`) explicit
-* [ ] add examples for other data files
+* [x] add examples for other data files
 * [ ] add examples for using some global settings (all-env globals, per-env globals)
 * [ ] use `ruamel.yaml` instead of `PyYaml` to preserve comments and anchor names.
 * [ ] describe using `jsonschema` module for JSON Schema / OpenAPI validation
