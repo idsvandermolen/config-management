@@ -8,7 +8,7 @@ from . import util
 from .datapath import DataPath
 
 
-def generate(dst: Path, config: DataPath, stack_name: str):
+def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
     "Generate grafana manifests."
     output_dir = Path(dst, stack_name, "grafana")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -74,3 +74,7 @@ def generate(dst: Path, config: DataPath, stack_name: str):
         ),
         Path(output_dir / "service-account.yaml").open("w", encoding="utf-8"),
     )
+    # ArgoCD app
+    app = DataPath(yaml.safe_load(Path(components, "argocd", "grafana.yaml").open(encoding="utf-8")))
+    app["spec.source.path"] = str(output_dir)
+    yaml.safe_dump(app.data, Path(output_dir, "application.yaml").open("w", encoding="utf-8"))
