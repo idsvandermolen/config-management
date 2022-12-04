@@ -7,19 +7,26 @@ from lib.datapath import DataPath
 
 def test_datapath_getitem():
     "Test DataPath.__getitem__."
-    data = {"a": {"b": 1, "c": [2]}}
+    data = {"a": {"b": 1, "c": [2], "d": [[3, 4], [5]]}}
     d = DataPath(data)
     assert d.data is data
-    assert d["a"] == {"b": 1, "c": [2]}
+    assert d["a"] == {"b": 1, "c": [2], "d": [[3, 4], [5]]}
     assert d["a.b"] == 1
     assert d["a.c"] == [2]
     assert d["a.c.0"] == 2
+    assert d["a.c[0]"] == 2
+    assert d["a.d"] == [[3, 4], [5]]
+    assert d["a.d[0]"] == [3, 4]
+    assert d["a.d[0][1]"] == 4
+    assert d["a.d[1][0]"] == 5
     with pytest.raises(TypeError):
         _ = d["a.b.c"]
     with pytest.raises(KeyError):
-        _ = d["a.d"]
+        _ = d["a.e"]
     with pytest.raises(IndexError):
         _ = d["a.c.1"]
+    with pytest.raises(IndexError):
+        _ = d["a.c[1]"]
 
 
 def test_datapath_setitem():
