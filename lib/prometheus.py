@@ -5,7 +5,7 @@ from pathlib import Path
 import kubernetes.client as k
 import yaml
 from . import util
-from .datapath import DataPath
+from datapath import DataPath
 
 
 def generate(dst: Path, components: Path, config: DataPath, stack_name: str):

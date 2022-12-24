@@ -10,6 +10,7 @@ PyYAML = "^6.0"
 kubernetes = "^24.2.0"
 pylint = "^2.14.2"
 pytest = "^7.1.3"
+datapath = {git = "https://github.com/idsvandermolen/datapath.git", rev = "v0.1.0"}
 
 [tool.poetry.dev-dependencies]
 

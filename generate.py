@@ -5,7 +5,7 @@ Generate manifests for a component
 import sys
 from pathlib import Path
 import yaml
-from lib.datapath import DataPath
+from datapath import DataPath
 from lib.grafana import generate as generate_grafana
 from lib.prometheus import generate as generate_prometheus
 
