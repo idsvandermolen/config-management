@@ -65,7 +65,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "datapath"
-version = "0.1.0"
+version = "0.2.0"
 description = "Path based access to items in a data structure"
 category = "main"
 optional = false
@@ -75,8 +75,8 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/idsvandermolen/datapath.git"
-reference = "v0.1.0"
-resolved_reference = "7d3d1ece0a9c79f306d7e8be7acd1beb567e2f44"
+reference = "v0.2.0"
+resolved_reference = "0a4c7cd1c1956eca077ee5e218fdbd29305f5705"
 
 [[package]]
 name = "dill"
@@ -452,7 +452,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "370e5c6352ba811689301119525a66b4a5984ab7a1e72be5f30da3a993b6a88b"
+content-hash = "11c2ca24ad45a50b820aef949d2daca29c46976245e6eb01e58d8b21428e74e1"
 
 [metadata.files]
 astroid = [
