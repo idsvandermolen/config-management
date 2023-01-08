@@ -4,7 +4,7 @@ Generate manifests for a component
 """
 import sys
 from pathlib import Path
-import yaml
+from ruamel.yaml import YAML
 from datapath import DataPath
 from lib.grafana import generate as generate_grafana
 from lib.prometheus import generate as generate_prometheus
@@ -32,9 +32,10 @@ def main(argv):
     if component_name not in GENERATORS:
         usage()
     generate = GENERATORS[component_name]
+    yaml = YAML()
     for env in ("development", "production"):
         config = DataPath(
-            yaml.safe_load(Path(CONFIGS / f"{env}.yaml").open(encoding="utf-8"))
+            yaml.load(Path(CONFIGS / f"{env}.yaml").open(encoding="utf-8"))
         )
         for stack_name in config["stacks"]:
             if component_name not in config[f"stacks.{stack_name}"]:

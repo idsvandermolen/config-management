@@ -59,7 +59,7 @@ There are a couple of possible improvements:
 * [x] make input/src (`components`) and output/dst (`manifests`) explicit
 * [x] add examples for other data files
 * [ ] add examples for using some global settings (all-env globals, per-env globals)
-* [ ] use `ruamel.yaml` instead of `PyYaml` to preserve comments and anchor names.
+* [x] use `ruamel.yaml` instead of `PyYaml` to preserve comments and anchor names.
 * [ ] describe using `jsonschema` module for JSON Schema / OpenAPI validation
 * [ ] perhaps use `bazel` instead of `make` for improved determinism
 * [ ] perhaps instead of using `shutil.copy` in Python, we should move this to the

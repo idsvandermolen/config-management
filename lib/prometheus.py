@@ -3,7 +3,7 @@ Generate Prometheus components
 """
 from pathlib import Path
 import kubernetes.client as k
-import yaml
+from ruamel.yaml import YAML
 from . import util
 from datapath import DataPath
 
@@ -40,12 +40,13 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
             )
         ],
     )
-    yaml.safe_dump(
+    yaml = YAML()
+    yaml.dump(
         client.sanitize_for_serialization(deployment),
         Path(output_dir / "deployment.yaml").open("w", encoding="utf-8"),
     )
     # hpa
-    yaml.safe_dump(
+    yaml.dump(
         client.sanitize_for_serialization(
             util.mk_hpa(
                 name,
@@ -61,20 +62,20 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
         Path(output_dir / "hpa.yaml").open("w", encoding="utf-8"),
     )
     # service
-    yaml.safe_dump(
+    yaml.dump(
         client.sanitize_for_serialization(
             util.mk_service(name, port=port, port_name=port_name)
         ),
         Path(output_dir / "service.yaml").open("w", encoding="utf-8"),
     )
     # service-account
-    yaml.safe_dump(
+    yaml.dump(
         client.sanitize_for_serialization(
             util.mk_service_account(name, automount_token=False)
         ),
         Path(output_dir / "service-account.yaml").open("w", encoding="utf-8"),
     )
     # ArgoCD app
-    app = DataPath(yaml.safe_load(Path(components, "argocd", "prometheus.yaml").open(encoding="utf-8")))
+    app = DataPath(yaml.load(Path(components, "argocd", "prometheus.yaml").open(encoding="utf-8")))
     app["spec.source.path"] = str(output_dir)
-    yaml.safe_dump(app.data, Path(output_dir, "application.yaml").open("w", encoding="utf-8"))
+    yaml.dump(app.data, Path(output_dir, "application.yaml").open("w", encoding="utf-8"))
