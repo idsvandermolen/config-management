@@ -9,6 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
+    # some comments about this source
     path: manifests/gke_dev_europe-west4_gc-dev-kube1/prometheus
     repoURL: https://github.com/idsvandermolen/config-management.git
     targetRevision: HEAD
