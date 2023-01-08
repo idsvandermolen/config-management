@@ -23,13 +23,8 @@ stacks:
 ```
 
 ## Patching process
-The Python code implements a simple `DataPath` data structure wrapper class,
-which can be used to access the data in the structure via path-based keys.
-Below the hood it splits the path into segments and iterates over the data
-structure by executing `__getitem__` up until the last segment. For the last
-segment it executes either `__getitem__`, `__setitem__` or `__delitem__`,
-depending on the requested operation.
-
+The Python code uses the [datapath](https://github.com/idsvandermolen/datapath)
+module, which can be used to access the data in the structure via path-based keys.
 The advantage is syntactic sugar. Instead of:
 ```python
 data["spec"]["template"]["spec"]["replicas"] = config["stacks"]["my-stack-1"]["component-1"]["replicas"]
@@ -61,9 +56,4 @@ There are a couple of possible improvements:
 * [ ] add examples for using some global settings (all-env globals, per-env globals)
 * [x] use `ruamel.yaml` instead of `PyYaml` to preserve comments and anchor names.
 * [ ] describe using `jsonschema` module for JSON Schema / OpenAPI validation
-* [ ] perhaps use `bazel` instead of `make` for improved determinism
-* [ ] perhaps instead of using `shutil.copy` in Python, we should move this to the
-  `Makefile`. However, in that case there are two places involved in the "build"
-  / "generate" step
-* [ ] if performance becomes an issue, we can generate things in parallel with
-  `multiprocessing` module
+* [ ] describe how to deal with (SOPS) secrets in YAML files
