@@ -17,14 +17,21 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
     port = config.get(f"stacks.{stack_name}.grafana.port", 3000)
     port_name = "ui"
     # deployment
+    image = config.get(f"stacks.{stack_name}.grafana.image", "grafana/grafana:latest")
+    requests = config.get(
+        f"stacks.{stack_name}.grafana.resources.requests",
+        {"cpu": "1", "memory": "1G"},
+    )
+    limits = config.get(
+        f"stacks.{stack_name}.grafana.resources.limits",
+        {"cpu": "1", "memory": "1G"},
+    )
     deployment = util.mk_deployment(
         name,
         [
             k.V1Container(
                 name=name,
-                image=config.get(
-                    f"stacks.{stack_name}.grafana.image", "grafana/grafana"
-                ),
+                image=image,
                 ports=[
                     k.V1ContainerPort(
                         name=port_name,
@@ -32,8 +39,8 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
                     )
                 ],
                 resources=k.V1ResourceRequirements(
-                    requests=config[f"stacks.{stack_name}.grafana.resources.requests"],
-                    limits=config[f"stacks.{stack_name}.grafana.resources.limits"],
+                    requests=requests,
+                    limits=limits,
                 ),
             )
         ],
@@ -48,8 +55,8 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
         client.sanitize_for_serialization(
             util.mk_hpa(
                 name,
-                min_replicas=config[f"stacks.{stack_name}.grafana.minReplicas"],
-                max_replicas=config[f"stacks.{stack_name}.grafana.maxReplicas"],
+                min_replicas=config.get(f"stacks.{stack_name}.grafana.minReplicas", 1),
+                max_replicas=config.get(f"stacks.{stack_name}.grafana.maxReplicas", 1),
                 scale_target_ref=k.V1CrossVersionObjectReference(
                     api_version=deployment.api_version,
                     kind=deployment.kind,
@@ -76,6 +83,10 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
         Path(output_dir / "service-account.yaml").open("w", encoding="utf-8"),
     )
     # ArgoCD app
-    app = DataPath(yaml.load(Path(components, "argocd", "grafana.yaml").open(encoding="utf-8")))
+    app = DataPath(
+        yaml.load(Path(components, "argocd", "grafana.yaml").open(encoding="utf-8"))
+    )
     app["spec.source.path"] = str(output_dir)
-    yaml.dump(app.data, Path(output_dir, "application.yaml").open("w", encoding="utf-8"))
+    yaml.dump(
+        app.data, Path(output_dir, "application.yaml").open("w", encoding="utf-8")
+    )
