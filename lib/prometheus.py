@@ -4,8 +4,8 @@ Generate Prometheus components
 from pathlib import Path
 import kubernetes.client as k
 from ruamel.yaml import YAML
-from . import util
 from datapath import DataPath
+from . import util
 
 
 def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
