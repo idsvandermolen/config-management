@@ -9,7 +9,7 @@ from datapath import DataPath
 from lib.grafana import generate as generate_grafana
 from lib.prometheus import generate as generate_prometheus
 
-CONFIGS = Path("configs")
+CONFIGS = Path("stack-registry/environments")
 MANIFESTS = Path("manifests")
 COMPONENTS = Path("components")
 GENERATORS = {
