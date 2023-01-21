@@ -12,15 +12,15 @@ spec:
         name: grafana
     spec:
       containers:
-      - image: grafana/grafana:latest
+      - image: grafana/grafana:6.5.2
         name: grafana
         ports:
         - containerPort: 3000
           name: ui
         resources:
           limits:
-            cpu: '2'
-            memory: 2G
+            cpu: '1'
+            memory: 1G
           requests:
             cpu: '1'
             memory: 1G
