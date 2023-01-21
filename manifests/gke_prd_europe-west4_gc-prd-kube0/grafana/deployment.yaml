@@ -12,7 +12,7 @@ spec:
         name: grafana
     spec:
       containers:
-      - image: grafana/grafana:6.5.2
+      - image: grafana/grafana:latest
         name: grafana
         ports:
         - containerPort: 3000
