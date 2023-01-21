@@ -1,0 +1,3 @@
+[submodule "stack-registry"]
+	path = stack-registry
+	url = ../stack-registry.git
