@@ -13,17 +13,17 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
     output_dir = Path(dst, stack_name, "grafana")
     output_dir.mkdir(parents=True, exist_ok=True)
     client = k.ApiClient()
-    name = config.get(f"stacks.{stack_name}.grafana.name", "grafana")
-    port = config.get(f"stacks.{stack_name}.grafana.port", 3000)
+    name = config.get(f"{stack_name}.grafana.name", "grafana")
+    port = config.get(f"{stack_name}.grafana.port", 3000)
     port_name = "ui"
     # deployment
-    image = config.get(f"stacks.{stack_name}.grafana.image", "grafana/grafana:latest")
+    image = config.get(f"{stack_name}.grafana.image", "grafana/grafana:latest")
     requests = config.get(
-        f"stacks.{stack_name}.grafana.resources.requests",
+        f"{stack_name}.grafana.resources.requests",
         {"cpu": "1", "memory": "1G"},
     )
     limits = config.get(
-        f"stacks.{stack_name}.grafana.resources.limits",
+        f"{stack_name}.grafana.resources.limits",
         {"cpu": "1", "memory": "1G"},
     )
     deployment = util.mk_deployment(
@@ -55,8 +55,8 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
         client.sanitize_for_serialization(
             util.mk_hpa(
                 name,
-                min_replicas=config.get(f"stacks.{stack_name}.grafana.minReplicas", 1),
-                max_replicas=config.get(f"stacks.{stack_name}.grafana.maxReplicas", 1),
+                min_replicas=config.get(f"{stack_name}.grafana.minReplicas", 1),
+                max_replicas=config.get(f"{stack_name}.grafana.maxReplicas", 1),
                 scale_target_ref=k.V1CrossVersionObjectReference(
                     api_version=deployment.api_version,
                     kind=deployment.kind,
