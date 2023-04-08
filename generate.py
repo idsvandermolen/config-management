@@ -34,7 +34,7 @@ def main(argv):
         usage()
     generate = GENERATORS[component_name]
     stack_registry = DataPath(get_registry(CONFIGS))
-    for env in stack_registry.keys():
+    for env in stack_registry:
         for stack_name in stack_registry[f"{env}.stacks"]:
             if component_name not in stack_registry[f"{env}.stacks.{stack_name}"]:
                 continue
