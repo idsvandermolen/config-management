@@ -1,14 +1,14 @@
-#!.venv/bin/python3
+#!/usr/bin/env python3
 """
 Generate manifests for a component
 """
 import sys
 import os
 from pathlib import Path
-from ruamel.yaml import YAML
 from datapath import DataPath
 from lib.grafana import generate as generate_grafana
 from lib.prometheus import generate as generate_prometheus
+from lib.stack_registry import get_registry
 
 CONFIGS = Path(os.environ.get("CONFIGS"))
 MANIFESTS = Path(os.environ.get("OUTPUT_DIR"))
@@ -33,15 +33,12 @@ def main(argv):
     if component_name not in GENERATORS:
         usage()
     generate = GENERATORS[component_name]
-    yaml = YAML()
-    for env in ("development", "production"):
-        config = DataPath(
-            yaml.load(Path(CONFIGS / f"{env}.yaml").open(encoding="utf-8"))
-        )
-        for stack_name in config["stacks"]:
-            if component_name not in config[f"stacks.{stack_name}"]:
+    stack_registry = DataPath(get_registry(CONFIGS))
+    for env in stack_registry.keys():
+        for stack_name in stack_registry[f"{env}.stacks"]:
+            if component_name not in stack_registry[f"{env}.stacks.{stack_name}"]:
                 continue
-            generate(MANIFESTS, COMPONENTS, config, stack_name)
+            generate(MANIFESTS, COMPONENTS, DataPath(stack_registry[f"{env}.stacks"]), stack_name)
 
 
 if __name__ == "__main__":

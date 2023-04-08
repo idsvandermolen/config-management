@@ -13,19 +13,19 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
     output_dir = Path(dst, stack_name, "prometheus")
     output_dir.mkdir(parents=True, exist_ok=True)
     client = k.ApiClient()
-    name = config.get(f"stacks.{stack_name}.prometheus.name", "prometheus")
-    port = config.get(f"stacks.{stack_name}.prometheus.port", 9090)
+    name = config.get(f"{stack_name}.prometheus.name", "prometheus")
+    port = config.get(f"{stack_name}.prometheus.port", 9090)
     port_name = "api"
     # deployment
     image = config.get(
-        f"stacks.{stack_name}.prometheus.image", "prom/prometheus:latest"
+        f"{stack_name}.prometheus.image", "prom/prometheus:latest"
     )
     requests = config.get(
-        f"stacks.{stack_name}.prometheus.resources.requests",
+        f"{stack_name}.prometheus.resources.requests",
         {"cpu": "1", "memory": "1G"},
     )
     limits = config.get(
-        f"stacks.{stack_name}.prometheus.resources.limits",
+        f"{stack_name}.prometheus.resources.limits",
         {"cpu": "1", "memory": "1G"},
     )
     deployment = util.mk_deployment(
@@ -58,10 +58,10 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
             util.mk_hpa(
                 name,
                 min_replicas=config.get(
-                    f"stacks.{stack_name}.prometheus.minReplicas", 1
+                    f"{stack_name}.prometheus.minReplicas", 1
                 ),
                 max_replicas=config.get(
-                    f"stacks.{stack_name}.prometheus.maxReplicas", 1
+                    f"{stack_name}.prometheus.maxReplicas", 1
                 ),
                 scale_target_ref=k.V1CrossVersionObjectReference(
                     api_version=deployment.api_version,
