@@ -3,15 +3,16 @@
 Generate manifests for a component
 """
 import sys
+import os
 from pathlib import Path
 from ruamel.yaml import YAML
 from datapath import DataPath
 from lib.grafana import generate as generate_grafana
 from lib.prometheus import generate as generate_prometheus
 
-CONFIGS = Path("stack-registry/environments")
-MANIFESTS = Path("manifests")
-COMPONENTS = Path("components")
+CONFIGS = Path(os.environ.get("CONFIGS"))
+MANIFESTS = Path(os.environ.get("OUTPUT_DIR"))
+COMPONENTS = Path(os.environ.get("COMPONENTS"))
 GENERATORS = {
     "grafana": generate_grafana,
     "prometheus": generate_prometheus,

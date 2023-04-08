@@ -1,3 +1,6 @@
+export CONFIGS = stack-registry/environments
+export COMPONENTS = components
+export OUTPUT_DIR = dist
 .PHONY: help
 help:  ## Show help messages for make targets
 	@awk 'BEGIN {FS = ":.*?## "}; /^[^: ]+:.*?## / {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -18,21 +21,21 @@ bootstrap: ## Setup python .venv
 
 .PHONY: clean
 clean: ## Cleanup manifests
-	@rm -rf manifests/*
+	@rm -rf $(OUTPUT_DIR)/*
 
 .PHONY: prometheus
 prometheus: ## Build prometheus
-	@rm -rf manifests/*/prometheus
+	@rm -rf $(OUTPUT_DIR)/*/prometheus
 	@./generate.py prometheus
 
 .PHONY: grafana
 grafana: ## Build grafana
-	@rm -rf manifests/*/grafana
+	@rm -rf $(OUTPUT_DIR)/*/grafana
 	@./generate.py grafana
 
 .PHONY: validate
 validate: ## Validate manifests
-	@kubeconform --verbose -skip Application manifests
+	@kubeconform --verbose -skip Application $(OUTPUT_DIR)
 
 .PHONY: test
 test: ## Run test suite
