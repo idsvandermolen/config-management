@@ -16,8 +16,7 @@ bootstrap: ## Setup python .venv
 	python3 -m venv .venv \
 	&& .venv/bin/pip install --no-cache-dir --upgrade pip \
 	&& . .venv/bin/activate \
-	&& .venv/bin/pip install --no-cache-dir poetry \
-	&& .venv/bin/poetry install --no-cache
+	&& poetry install --no-cache
 
 .PHONY: clean
 clean: ## Cleanup manifests
