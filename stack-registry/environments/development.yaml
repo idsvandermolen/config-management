@@ -1,0 +1,9 @@
+environment: development
+global:
+  elasticsearch_endpoint: https://es.dev.example.com:9200
+stacks:
+  gke_dev_europe-west4_gc-dev-kube0:
+    grafana:
+      image: grafana/grafana:6.5.2
+  gke_dev_europe-west4_gc-dev-kube1:
+    prometheus:
