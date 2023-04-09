@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "yaml-config"
+name = "config-management"
 version = "0.1.0"
-description = "Manage YAML based configs"
+description = "Manage configurations"
 authors = ["Ids van der Molen <2285220+idsvandermolen@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
