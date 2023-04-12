@@ -8,24 +8,24 @@ from datapath import DataPath
 from . import util
 
 
-def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
-    "Generate prometheus manifests."
-    output_dir = Path(dst, stack_name, "prometheus")
+def generate_stack(dest: Path, stack_registry: DataPath, stack_name: str):
+    "Generate stack manifests configured in stack_registry into dest."
+    output_dir = Path(dest, stack_name, "prometheus")
     output_dir.mkdir(parents=True, exist_ok=True)
     client = k.ApiClient()
-    name = config.get(f"{stack_name}.prometheus.name", "prometheus")
-    port = config.get(f"{stack_name}.prometheus.port", 9090)
+    name = stack_registry.get(f"stacks.{stack_name}.prometheus.name", "prometheus")
+    port = stack_registry.get(f"stacks.{stack_name}.prometheus.port", 9090)
     port_name = "api"
     # deployment
-    image = config.get(
-        f"{stack_name}.prometheus.image", "prom/prometheus:latest"
+    image = stack_registry.get(
+        f"stacks.{stack_name}.prometheus.image", "prom/prometheus:latest"
     )
-    requests = config.get(
-        f"{stack_name}.prometheus.resources.requests",
+    requests = stack_registry.get(
+        f"stacks.{stack_name}.prometheus.resources.requests",
         {"cpu": "1", "memory": "1G"},
     )
-    limits = config.get(
-        f"{stack_name}.prometheus.resources.limits",
+    limits = stack_registry.get(
+        f"stacks.{stack_name}.prometheus.resources.limits",
         {"cpu": "1", "memory": "1G"},
     )
     deployment = util.mk_deployment(
@@ -57,11 +57,11 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
         client.sanitize_for_serialization(
             util.mk_hpa(
                 name,
-                min_replicas=config.get(
-                    f"{stack_name}.prometheus.minReplicas", 1
+                min_replicas=stack_registry.get(
+                    f"stacks.{stack_name}.prometheus.minReplicas", 1
                 ),
-                max_replicas=config.get(
-                    f"{stack_name}.prometheus.maxReplicas", 1
+                max_replicas=stack_registry.get(
+                    f"stacks.{stack_name}.prometheus.maxReplicas", 1
                 ),
                 scale_target_ref=k.V1CrossVersionObjectReference(
                     api_version=deployment.api_version,
@@ -88,9 +88,19 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
     )
     # ArgoCD app
     app = DataPath(
-        yaml.load(Path(components, "argocd", "prometheus.yaml").open(encoding="utf-8"))
+        yaml.load(
+            Path("components", "argocd", "prometheus.yaml").open(encoding="utf-8")
+        )
     )
     app["spec.source.path"] = str(output_dir)
     yaml.dump(
         app.data, Path(output_dir, "application.yaml").open("w", encoding="utf-8")
     )
+
+
+def generate(stack_registry: DataPath, dest: Path):
+    "Generate prometheus manifests."
+    for stack_name in stack_registry["stacks"]:
+        if "prometheus" not in stack_registry[f"stacks.{stack_name}"]:
+            continue
+        generate_stack(dest, stack_registry, stack_name)
