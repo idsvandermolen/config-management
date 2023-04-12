@@ -8,22 +8,24 @@ from datapath import DataPath
 from . import util
 
 
-def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
-    "Generate grafana manifests."
-    output_dir = Path(dst, stack_name, "grafana")
+def generate_stack(dest: Path, stack_registry: DataPath, stack_name: str):
+    "Generate stack manifests configured in stack_registry into dest."
+    output_dir = Path(dest, stack_name, "grafana")
     output_dir.mkdir(parents=True, exist_ok=True)
     client = k.ApiClient()
-    name = config.get(f"{stack_name}.grafana.name", "grafana")
-    port = config.get(f"{stack_name}.grafana.port", 3000)
+    name = stack_registry.get(f"stacks.{stack_name}.grafana.name", "grafana")
+    port = stack_registry.get(f"stacks.{stack_name}.grafana.port", 3000)
     port_name = "ui"
     # deployment
-    image = config.get(f"{stack_name}.grafana.image", "grafana/grafana:latest")
-    requests = config.get(
-        f"{stack_name}.grafana.resources.requests",
+    image = stack_registry.get(
+        f"stacks.{stack_name}.grafana.image", "grafana/grafana:latest"
+    )
+    requests = stack_registry.get(
+        f"stacks.{stack_name}.grafana.resources.requests",
         {"cpu": "1", "memory": "1G"},
     )
-    limits = config.get(
-        f"{stack_name}.grafana.resources.limits",
+    limits = stack_registry.get(
+        f"stacks.{stack_name}.grafana.resources.limits",
         {"cpu": "1", "memory": "1G"},
     )
     deployment = util.mk_deployment(
@@ -55,8 +57,12 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
         client.sanitize_for_serialization(
             util.mk_hpa(
                 name,
-                min_replicas=config.get(f"{stack_name}.grafana.minReplicas", 1),
-                max_replicas=config.get(f"{stack_name}.grafana.maxReplicas", 1),
+                min_replicas=stack_registry.get(
+                    f"stacks.{stack_name}.grafana.minReplicas", 1
+                ),
+                max_replicas=stack_registry.get(
+                    f"stacks.{stack_name}.grafana.maxReplicas", 1
+                ),
                 scale_target_ref=k.V1CrossVersionObjectReference(
                     api_version=deployment.api_version,
                     kind=deployment.kind,
@@ -84,9 +90,17 @@ def generate(dst: Path, components: Path, config: DataPath, stack_name: str):
     )
     # ArgoCD app
     app = DataPath(
-        yaml.load(Path(components, "argocd", "grafana.yaml").open(encoding="utf-8"))
+        yaml.load(Path("components", "argocd", "grafana.yaml").open(encoding="utf-8"))
     )
     app["spec.source.path"] = str(output_dir)
     yaml.dump(
         app.data, Path(output_dir, "application.yaml").open("w", encoding="utf-8")
     )
+
+
+def generate(stack_registry: DataPath, dest: Path):
+    "Generate grafana manifests."
+    for stack_name in stack_registry["stacks"]:
+        if "grafana" not in stack_registry[f"stacks.{stack_name}"]:
+            continue
+        generate_stack(dest, stack_registry, stack_name)
